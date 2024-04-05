@@ -16,7 +16,7 @@ const Button: FC<ButtonProps> = ({ children, variant = 'outline', ...props }) =>
   }, [props.className, variant])
 
   return (
-    <button className={`${className} `} {...props}>
+    <button {...props} className={className}>
       {children}
     </button>
   )
