@@ -1,5 +1,6 @@
 import { type DragEvent, type FC, useCallback, useEffect, useState } from 'react'
 import Button from 'src/components/atoms/Button'
+import Error from 'src/components/atoms/Error.tsx'
 
 const Upload: FC = () => {
   const [file, setFile] = useState<File | null>(null)
@@ -53,6 +54,7 @@ const Upload: FC = () => {
         Upload
       </Button>
       <p className="text-base text-grey-450">or drop your file here</p>
+      {error && <Error message={error} onClose={() => setError(null)} />}
     </div>
   )
 }
