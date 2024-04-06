@@ -11,6 +11,7 @@ export default {
         200: '#EBEFF2',
         300: '#E2E6EA',
         400: '#CDD3D8',
+        450: '#686B76',
         500: '#242634'
       },
       'flat-grey': '#F8F8F8',
@@ -24,6 +25,11 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', ...defaultTheme.fontFamily.sans]
+      },
+      lineHeight: {
+        11: '3rem',
+        12: '3.5rem',
+        13: '4rem'
       }
     }
   },
