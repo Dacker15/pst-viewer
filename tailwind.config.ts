@@ -1,6 +1,6 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
+import defaultTheme from 'tailwindcss/defaultTheme'
+import type { Config } from 'tailwindcss/types/config'
 
-/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
@@ -30,8 +30,21 @@ export default {
         11: '3rem',
         12: '3.5rem',
         13: '4rem'
+      },
+      animation: {
+        'slide-from-bottom': '1s ease-out 0s 1 slideFromBottom;'
+      },
+      keyframes: {
+        slideFromBottom: {
+          '0%': {
+            transform: 'translateY(100%)'
+          },
+          '100%': {
+            transform: 'translateY(0)'
+          }
+        }
       }
     }
   },
   plugins: []
-}
+} satisfies Config
