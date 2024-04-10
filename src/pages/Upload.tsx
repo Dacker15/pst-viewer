@@ -1,6 +1,6 @@
 import { type DragEvent, type FC, useCallback, useEffect, useState } from 'react'
 import Button from 'src/components/atoms/Button'
-import { useNotification } from 'src/lib/contexts/NotificationProvider'
+import { useNotification } from 'src/lib/hooks/useNotification'
 
 const Upload: FC = () => {
   const [file, setFile] = useState<File | null>(null)
