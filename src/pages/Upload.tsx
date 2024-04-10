@@ -41,8 +41,8 @@ const Upload: FC = () => {
 
   useEffect(() => {
     if (error) {
-      console.error(error)
       open(error)
+      setError(null)
     }
   }, [error, open])
 
