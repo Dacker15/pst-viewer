@@ -1,10 +1,11 @@
 import { type DragEvent, type FC, useCallback, useEffect, useState } from 'react'
 import Button from 'src/components/atoms/Button'
-import Error from 'src/components/atoms/Error.tsx'
+import { useNotification } from 'src/lib/contexts/NotificationProvider'
 
 const Upload: FC = () => {
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const { open } = useNotification()
 
   const handleDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault()
@@ -41,8 +42,9 @@ const Upload: FC = () => {
   useEffect(() => {
     if (error) {
       console.error(error)
+      open(error)
     }
-  }, [error])
+  }, [error, open])
 
   return (
     <div className="flex flex-col items-center gap-4 py-8 h-screen" onDragOver={handleDragOver} onDrop={handleDrop}>
@@ -54,7 +56,6 @@ const Upload: FC = () => {
         Upload
       </Button>
       <p className="text-base text-grey-450">or drop your file here</p>
-      {error && <Error message={error} onClose={() => setError(null)} />}
     </div>
   )
 }
