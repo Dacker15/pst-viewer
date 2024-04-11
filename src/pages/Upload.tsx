@@ -2,7 +2,11 @@ import { type DragEvent, type FC, useCallback, useEffect, useState } from 'react
 import Button from 'src/components/atoms/Button'
 import { useNotification } from 'src/lib/hooks/useNotification'
 
-const Upload: FC = () => {
+type UploadProps = {
+  onUploadDone: (file: File) => void
+}
+
+const Upload: FC<UploadProps> = (props) => {
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string | null>(null)
   const { open } = useNotification()
@@ -26,18 +30,18 @@ const Upload: FC = () => {
         return
       }
       setFile(item.getAsFile())
-      return
-    }
-    if (hasFilesOneFile) {
+    } else if (hasFilesOneFile) {
       setFile(event.dataTransfer.files[0])
+    } else {
+      setError('Unexpected error occurred. Please re-upload it')
     }
   }, [])
 
   useEffect(() => {
     if (file) {
-      console.log(file)
+      props.onUploadDone(file)
     }
-  }, [file])
+  }, [props, file])
 
   useEffect(() => {
     if (error) {
