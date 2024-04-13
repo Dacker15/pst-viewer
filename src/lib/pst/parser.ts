@@ -23,6 +23,7 @@ const parseFolder = (folder: PSTFolder): Directory => {
     tasks: [],
     appointments: [],
     unscheduledAppointments: [],
+    contacts: [],
     children: []
   }
 
@@ -110,6 +111,72 @@ const parseFolder = (folder: PSTFolder): Directory => {
         }
       } else if (message instanceof PSTContact) {
         console.log('Contact:', message.displayName)
+        directory.contacts.push({
+          displayName: message.displayName,
+          givenName: message.givenName,
+          middleName: message.middleName,
+          surname: message.surname,
+          nickname: message.nickname,
+          account: message.account,
+          initials: message.initials,
+          generation: message.generation,
+          anniversary: message.anniversary,
+          spouseName: message.spouseName,
+          birthdate: message.birthday,
+          primaryTelephoneNumber: message.primaryTelephoneNumber,
+          primaryFaxNumber: message.primaryFaxNumber,
+          emailAddresses: [
+            { email: message.email1EmailAddress, name: message.email1DisplayName },
+            { email: message.email2EmailAddress, name: message.email2DisplayName },
+            { email: message.email3EmailAddress, name: message.email3DisplayName }
+          ],
+          address: {
+            address: message.homeAddress,
+            street: message.homeAddressStreet,
+            city: message.homeAddressCity,
+            stateOrProvince: message.homeAddressStateOrProvince,
+            country: message.homeAddressCountry,
+            postalCode: message.homeAddressPostalCode,
+            postOfficeBox: message.homeAddressPostOfficeBox,
+            faxNumber: message.homeFaxNumber,
+            phoneNumber: message.homeTelephoneNumber,
+            secondaryPhoneNumber: message.home2TelephoneNumber
+          },
+          businessAddress: {
+            street: message.businessAddressStreet,
+            city: message.businessAddressCity,
+            stateOrProvince: message.businessAddressStateOrProvince,
+            country: message.businessAddressCountry,
+            postalCode: message.businessPostalCode,
+            postOfficeBox: message.businessPoBox,
+            faxNumber: message.businessFaxNumber,
+            phoneNumber: message.businessTelephoneNumber,
+            secondaryPhoneNumber: message.business2TelephoneNumber,
+            homepage: message.businessHomePage
+          },
+          companyAddress: {
+            name: message.companyName,
+            phoneNumber: message.companyMainPhoneNumber
+          },
+          workAddress: {
+            address: message.workAddress,
+            street: message.workAddressStreet,
+            city: message.workAddressCity,
+            country: message.workAddressCountry,
+            postalCode: message.workAddressPostalCode,
+            postOfficeBox: message.workAddressPostOfficeBox
+          },
+          otherAddress: {
+            address: message.otherAddress,
+            street: message.otherAddressStreet,
+            city: message.otherAddressCity,
+            stateOrProvince: message.otherAddressStateOrProvince,
+            country: message.otherAddressCountry,
+            postalCode: message.otherAddressPostalCode,
+            postOfficeBox: message.otherAddressPostOfficeBox,
+            phoneNumber: message.otherTelephoneNumber
+          }
+        })
       } else if (message instanceof PSTMessage) {
         console.log('Message:', message.subject)
       } else {

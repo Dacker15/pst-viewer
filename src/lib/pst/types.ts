@@ -3,6 +3,7 @@ export type Directory = {
   tasks: Task[]
   appointments: Appointment[]
   unscheduledAppointments: UnscheduledAppointment[]
+  contacts: Contact[]
   children: Directory[]
 }
 
@@ -74,4 +75,54 @@ export type UnscheduledAppointment = {
 export type Appointment = UnscheduledAppointment & {
   startAt: Date
   endAt: Date
+}
+
+export type ContactMailAddress = {
+  email: string
+  name: string
+}
+
+export type ContactAddress = {
+  address?: string
+  street: string
+  city: string
+  stateOrProvince?: string
+  country: string
+  postalCode: string
+  postOfficeBox: string
+  faxNumber?: string
+  phoneNumber?: string
+  secondaryPhoneNumber?: string
+}
+
+export type ContactBusinessAddress = ContactAddress & {
+  homepage: string
+}
+
+export type ContactCompanyAddress = {
+  name: string
+  phoneNumber: string
+}
+
+export type Contact = {
+  displayName: string
+  emailAddresses: ContactMailAddress[]
+  address: ContactAddress
+  otherAddress: ContactAddress
+  workAddress: ContactAddress
+  account?: string
+  anniversary: Date | null
+  birthdate: Date | null
+  businessAddress: ContactBusinessAddress
+  companyAddress: ContactCompanyAddress
+  givenName: string
+  middleName: string
+  nickname: string
+  surname: string
+  generation: string
+  initials: string
+  spouseName: string
+
+  primaryTelephoneNumber: string
+  primaryFaxNumber: string
 }
