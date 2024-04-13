@@ -29,7 +29,7 @@ export type TaskRecurrenceOptions = {
   endAfterOccurrences?: number
 }
 
-export type Task = {
+export type Task = BaseEntity & {
   name: string
   description?: string
   startAt?: Date
@@ -56,7 +56,7 @@ export enum AppointmentFrequencyType {
   Yearly = 4
 }
 
-export type UnscheduledAppointment = {
+export type UnscheduledAppointment = BaseEntity & {
   name: string
   description?: string
   startAt: Date | null
@@ -105,7 +105,7 @@ export type ContactCompanyAddress = {
   phoneNumber: string
 }
 
-export type Contact = {
+export type Contact = BaseEntity & {
   displayName: string
   emailAddresses: ContactMailAddress[]
   address: ContactAddress
@@ -140,7 +140,7 @@ export enum MessagePriority {
   High = 2
 }
 
-export type Message = {
+export type Message = BaseEntity & {
   from: string
   fromName: string
   to: string
@@ -154,4 +154,17 @@ export type Message = {
   isRead: boolean
   isDraft: boolean
   createdAt: Date
+}
+
+export type Attachment = {
+  name: string
+  content: Buffer
+  size: number
+  mimeType: string
+  createdAt: Date | null
+  updatedAt: Date | null
+}
+
+export type BaseEntity = {
+  attachments: Attachment[]
 }

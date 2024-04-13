@@ -1,5 +1,5 @@
-import { PSTFile, type PSTFolder, PSTMessage, PSTTask } from 'pst-extractor'
-import type { Directory, TaskFrequencyType } from 'src/lib/pst/types.ts'
+import { type PSTAttachment, PSTFile, type PSTFolder, PSTMessage, PSTTask } from 'pst-extractor'
+import type { Attachment, Directory, TaskFrequencyType } from 'src/lib/pst/types'
 import { PSTAppointment } from 'pst-extractor/dist/PSTAppointment.class'
 import { PSTContact } from 'pst-extractor/dist/PSTContact.class'
 import { type MonthNthSpecific, PatternType, RecurFrequency } from 'pst-extractor/dist/RecurrencePattern.class'
@@ -15,6 +15,29 @@ const parseTaskFrequencyType = (type: RecurFrequency): TaskFrequencyType => {
     case RecurFrequency.Yearly:
       return 'yearly'
   }
+}
+
+const parseAttachment = (attachment: PSTAttachment): Attachment => {
+  const output = new Buffer(attachment.fileInputStream?.length?.toNumber() || attachment.size)
+  attachment.fileInputStream?.read(output)
+  return {
+    name: attachment.longFilename,
+    size: attachment.size,
+    mimeType: attachment.mimeTag,
+    createdAt: attachment.creationTime,
+    updatedAt: attachment.modificationTime,
+    content: output
+  }
+}
+
+const parseAttachments = (message: PSTMessage): Attachment[] => {
+  const attachments: Attachment[] = []
+  if (message.numberOfAttachments) {
+    for (let i = 0; i < message.numberOfAttachments; i++) {
+      attachments.push(parseAttachment(message.getAttachment(i)))
+    }
+  }
+  return attachments
 }
 
 const parseFolder = (folder: PSTFolder): Directory => {
@@ -37,8 +60,9 @@ const parseFolder = (folder: PSTFolder): Directory => {
   if (folder.contentCount > 0) {
     let message = folder.getNextChild()
     while (message !== null) {
+      const attachments = parseAttachments(message)
+
       if (message instanceof PSTTask) {
-        console.log('Task:', message.subject)
         directory.tasks.push({
           name: message.subject,
           description: message.body,
@@ -69,12 +93,10 @@ const parseFolder = (folder: PSTFolder): Directory => {
                 }
               : undefined,
           createdBy: message.taskOwner,
-          assignedTo: message.taskAssigner
+          assignedTo: message.taskAssigner,
+          attachments
         })
-        // console.log(messages.numberOfAttachments)
-        // console.log(messages.attachmentTable.getItems().forEach((attachment) => console.log(attachment.data)))
       } else if (message instanceof PSTAppointment) {
-        console.log('Appointment:', message.subject)
         if (message.startTime !== null && message.endTime !== null) {
           directory.appointments.push({
             name: message.subject,
@@ -90,7 +112,8 @@ const parseFolder = (folder: PSTFolder): Directory => {
             recurrence: message.recurrenceType,
             location: message.location,
             organizer: message.netMeetingOrganizerAlias,
-            hasOnlineMeeting: message.isOnlineMeeting
+            hasOnlineMeeting: message.isOnlineMeeting,
+            attachments
           })
         } else {
           directory.unscheduledAppointments.push({
@@ -107,11 +130,11 @@ const parseFolder = (folder: PSTFolder): Directory => {
             recurrence: message.recurrenceType,
             location: message.location,
             organizer: message.netMeetingOrganizerAlias,
-            hasOnlineMeeting: message.isOnlineMeeting
+            hasOnlineMeeting: message.isOnlineMeeting,
+            attachments
           })
         }
       } else if (message instanceof PSTContact) {
-        console.log('Contact:', message.displayName)
         directory.contacts.push({
           displayName: message.displayName,
           givenName: message.givenName,
@@ -176,10 +199,10 @@ const parseFolder = (folder: PSTFolder): Directory => {
             postalCode: message.otherAddressPostalCode,
             postOfficeBox: message.otherAddressPostOfficeBox,
             phoneNumber: message.otherTelephoneNumber
-          }
+          },
+          attachments
         })
       } else if (message instanceof PSTMessage) {
-        console.log('Message:', message.subject)
         if (message.creationTime === null) {
           message = folder.getNextChild()
           continue
@@ -197,10 +220,9 @@ const parseFolder = (folder: PSTFolder): Directory => {
           importance: message.importance,
           priority: message.priority,
           isRead: message.isRead,
-          isDraft: message.isUnsent
+          isDraft: message.isUnsent,
+          attachments
         })
-      } else {
-        console.log('Unknown:', message.displayName)
       }
 
       message = folder.getNextChild()
