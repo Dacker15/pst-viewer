@@ -24,6 +24,7 @@ const parseFolder = (folder: PSTFolder): Directory => {
     appointments: [],
     unscheduledAppointments: [],
     contacts: [],
+    messages: [],
     children: []
   }
 
@@ -179,6 +180,25 @@ const parseFolder = (folder: PSTFolder): Directory => {
         })
       } else if (message instanceof PSTMessage) {
         console.log('Message:', message.subject)
+        if (message.creationTime === null) {
+          message = folder.getNextChild()
+          continue
+        }
+        directory.messages.push({
+          from: message.senderEmailAddress,
+          fromName: message.senderName,
+          to: message.displayTo,
+          cc: message.displayCC.length > 0 ? message.displayCC.split(';') : [],
+          bcc: message.displayBCC.length > 0 ? message.displayBCC.split(';') : [],
+          subject: message.subject,
+          body: message.body,
+          bodyHtml: message.bodyHTML,
+          createdAt: message.creationTime,
+          importance: message.importance,
+          priority: message.priority,
+          isRead: message.isRead,
+          isDraft: message.isUnsent
+        })
       } else {
         console.log('Unknown:', message.displayName)
       }

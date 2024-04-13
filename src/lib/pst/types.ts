@@ -4,6 +4,7 @@ export type Directory = {
   appointments: Appointment[]
   unscheduledAppointments: UnscheduledAppointment[]
   contacts: Contact[]
+  messages: Message[]
   children: Directory[]
 }
 
@@ -125,4 +126,32 @@ export type Contact = {
 
   primaryTelephoneNumber: string
   primaryFaxNumber: string
+}
+
+export enum MessageImportance {
+  Low = 0,
+  Normal = 1,
+  High = 2
+}
+
+export enum MessagePriority {
+  Low = 0,
+  Normal = 1,
+  High = 2
+}
+
+export type Message = {
+  from: string
+  fromName: string
+  to: string
+  cc: string[]
+  bcc: string[]
+  subject: string
+  body: string
+  bodyHtml: string
+  importance: MessageImportance
+  priority: MessagePriority
+  isRead: boolean
+  isDraft: boolean
+  createdAt: Date
 }
