@@ -1,7 +1,7 @@
 import { type FC, useCallback } from 'react'
 import Upload from 'src/pages/Upload'
 import NotificationProvider from 'src/lib/contexts/NotificationProvider'
-import { parseFile } from 'src/lib/parser'
+import { parseFile } from 'src/lib/pst/parser'
 
 const App: FC = () => {
   const handleUploadDone = useCallback(async (file: File) => {
