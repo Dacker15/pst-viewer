@@ -21,6 +21,8 @@ const parseFolder = (folder: PSTFolder): Directory => {
   const directory: Directory = {
     name: folder.displayName,
     tasks: [],
+    appointments: [],
+    unscheduledAppointments: [],
     children: []
   }
 
@@ -71,6 +73,41 @@ const parseFolder = (folder: PSTFolder): Directory => {
         // console.log(messages.attachmentTable.getItems().forEach((attachment) => console.log(attachment.data)))
       } else if (message instanceof PSTAppointment) {
         console.log('Appointment:', message.subject)
+        if (message.startTime !== null && message.endTime !== null) {
+          directory.appointments.push({
+            name: message.subject,
+            description: message.body,
+            startAt: message.startTime,
+            endAt: message.endTime,
+            duration: message.duration,
+            isAllDay: message.subType,
+            busyStatus: message.busyStatus,
+            attendees: message.allAttendees?.split(';') ?? [],
+            requiredAttendees: message.toAttendees?.split(';') ?? [],
+            optionalAttendees: message.ccAttendees?.split(';') ?? [],
+            recurrence: message.recurrenceType,
+            location: message.location,
+            organizer: message.netMeetingOrganizerAlias,
+            hasOnlineMeeting: message.isOnlineMeeting
+          })
+        } else {
+          directory.unscheduledAppointments.push({
+            name: message.subject,
+            description: message.body,
+            startAt: message.startTime,
+            endAt: message.endTime,
+            duration: message.duration,
+            isAllDay: message.subType,
+            busyStatus: message.busyStatus,
+            attendees: message.allAttendees?.split(';') ?? [],
+            requiredAttendees: message.toAttendees?.split(';') ?? [],
+            optionalAttendees: message.ccAttendees?.split(';') ?? [],
+            recurrence: message.recurrenceType,
+            location: message.location,
+            organizer: message.netMeetingOrganizerAlias,
+            hasOnlineMeeting: message.isOnlineMeeting
+          })
+        }
       } else if (message instanceof PSTContact) {
         console.log('Contact:', message.displayName)
       } else if (message instanceof PSTMessage) {
