@@ -40,7 +40,7 @@ const parseAttachments = (message: PSTMessage): Attachment[] => {
   return attachments
 }
 
-const parseFolder = (folder: PSTFolder): Directory => {
+const parseFolder = (folder: PSTFolder, root: Directory | null): Directory => {
   const directory: Directory = {
     name: folder.displayName,
     tasks: [],
@@ -48,12 +48,13 @@ const parseFolder = (folder: PSTFolder): Directory => {
     unscheduledAppointments: [],
     contacts: [],
     messages: [],
-    children: []
+    children: [],
+    root
   }
 
   if (folder.hasSubfolders) {
     for (const subFolder of folder.getSubFolders()) {
-      directory.children.push(parseFolder(subFolder))
+      directory.children.push(parseFolder(subFolder, directory))
     }
   }
 
@@ -236,5 +237,5 @@ export const parseFile = (data: Buffer): Directory => {
   const file = new PSTFile(data)
   const root = file.getRootFolder()
 
-  return parseFolder(root)
+  return parseFolder(root, null)
 }

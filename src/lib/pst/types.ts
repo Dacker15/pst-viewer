@@ -6,6 +6,7 @@ export type Directory = {
   contacts: Contact[]
   messages: Message[]
   children: Directory[]
+  root: Directory | null
 }
 
 export enum TaskStatus {
