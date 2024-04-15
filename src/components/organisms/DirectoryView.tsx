@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import type { Directory } from 'src/lib/pst/types'
-import DirectoryNode from 'src/components/molecules/DirectoryNode.tsx'
+import DirectoryNode from 'src/components/molecules/DirectoryNode'
 
 type DirectoryViewProps = {
   directory: Directory
@@ -9,9 +9,15 @@ type DirectoryViewProps = {
 
 const DirectoryView: FC<DirectoryViewProps> = (props) => {
   return (
-    <div className="flex flex-col gap-y-1">
-      {props.directory.children.map((child) => (
-        <DirectoryNode name={child.name} key={child.name} onClick={() => props.onDirectoryChange(child)} />
+    <div className="flex flex-col w-full">
+      {props.directory.children.map((child, index, array) => (
+        <DirectoryNode
+          key={child.name}
+          name={child.name}
+          isFirst={index === 0}
+          isLast={index === array.length - 1}
+          onClick={() => props.onDirectoryChange(child)}
+        />
       ))}
     </div>
   )

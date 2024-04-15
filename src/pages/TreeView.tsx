@@ -1,6 +1,8 @@
 import { type FC, useCallback, useMemo, useState } from 'react'
 import type { Directory } from 'src/lib/pst/types'
 import DirectoryView from 'src/components/organisms/DirectoryView'
+import Button from 'src/components/atoms/Button'
+import Back from 'src/assets/icons/back.svg?react'
 
 type TreeViewProps = {
   data: Directory
@@ -17,12 +19,12 @@ const TreeView: FC<TreeViewProps> = (props) => {
   }, [directory])
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <div className="border-b border-grey-450">
+    <div className="flex flex-col gap-y-4 w-screen">
+      <div className="border-b border-grey-400">
         <div className="container mx-auto p-4">
-          <button disabled={isBackDisabled} onClick={handleBack}>
-            Back
-          </button>
+          <Button disabled={isBackDisabled} onClick={handleBack}>
+            <Back className="w-6 h-6 stroke-grey-500" />
+          </Button>
         </div>
       </div>
       <div className="container mx-auto p-4">

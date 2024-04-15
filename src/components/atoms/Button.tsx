@@ -17,9 +17,10 @@ const Button: FC<ButtonProps> = ({ children, variant = 'outline', size = 'sm', r
       'px-5 py-2 text-sm': size === 'sm',
       'px-8 py-4 text-base': size === 'md',
       'px-12 py-5 text-lg': size === 'lg',
-      'rounded-full': rounded
+      'rounded-full': rounded,
+      'cursor-not-allowed opacity-50 pointer-events-none': props.disabled
     })
-  }, [props.className, variant, size, rounded])
+  }, [props.className, props.disabled, variant, size, rounded])
 
   return (
     <button {...props} className={className}>
