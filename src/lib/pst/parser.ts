@@ -40,9 +40,9 @@ const parseAttachments = (message: PSTMessage): Attachment[] => {
   return attachments
 }
 
-const parseFolder = (folder: PSTFolder, root: Directory | null): Directory => {
+const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderName: string = ''): Directory => {
   const directory: Directory = {
-    name: folder.displayName,
+    name: folder.displayName || folderName,
     tasks: [],
     appointments: [],
     unscheduledAppointments: [],
@@ -237,5 +237,5 @@ export const parseFile = (data: Buffer): Directory => {
   const file = new PSTFile(data)
   const root = file.getRootFolder()
 
-  return parseFolder(root, null)
+  return parseFolder(root, null, '🏠')
 }
