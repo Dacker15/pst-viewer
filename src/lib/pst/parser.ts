@@ -1,4 +1,5 @@
 import { type PSTAttachment, PSTFile, type PSTFolder, PSTMessage, PSTTask } from 'pst-extractor'
+import { v4 as uuidV4 } from 'uuid'
 import type { Attachment, Directory, TaskFrequencyType } from 'src/lib/pst/types'
 import { PSTAppointment } from 'pst-extractor/dist/PSTAppointment.class'
 import { PSTContact } from 'pst-extractor/dist/PSTContact.class'
@@ -42,6 +43,7 @@ const parseAttachments = (message: PSTMessage): Attachment[] => {
 
 const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderName: string = ''): Directory => {
   const directory: Directory = {
+    id: uuidV4(),
     name: folder.displayName || folderName,
     tasks: [],
     appointments: [],
@@ -65,6 +67,7 @@ const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderNam
 
       if (message instanceof PSTTask) {
         directory.tasks.push({
+          id: uuidV4(),
           name: message.subject,
           description: message.body,
           startAt: message.taskStartDate ?? undefined,
@@ -100,6 +103,7 @@ const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderNam
       } else if (message instanceof PSTAppointment) {
         if (message.startTime !== null && message.endTime !== null) {
           directory.appointments.push({
+            id: uuidV4(),
             name: message.subject,
             description: message.body,
             startAt: message.startTime,
@@ -118,6 +122,7 @@ const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderNam
           })
         } else {
           directory.unscheduledAppointments.push({
+            id: uuidV4(),
             name: message.subject,
             description: message.body,
             startAt: message.startTime,
@@ -137,6 +142,7 @@ const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderNam
         }
       } else if (message instanceof PSTContact) {
         directory.contacts.push({
+          id: uuidV4(),
           displayName: message.displayName,
           givenName: message.givenName,
           middleName: message.middleName,
@@ -209,6 +215,7 @@ const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderNam
           continue
         }
         directory.messages.push({
+          id: uuidV4(),
           from: message.senderEmailAddress,
           fromName: message.senderName,
           to: message.displayTo,

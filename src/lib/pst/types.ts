@@ -1,4 +1,5 @@
 export type Directory = {
+  id: string
   name: string
   tasks: Task[]
   appointments: Appointment[]
@@ -167,5 +168,6 @@ export type Attachment = {
 }
 
 export type BaseEntity = {
+  id: string
   attachments: Attachment[]
 }
