@@ -2,6 +2,11 @@ import { type FC, useMemo } from 'react'
 import type { Directory } from 'src/lib/pst/types'
 import DirectoryNode from 'src/components/molecules/DirectoryNode'
 import { getFirstNotUndefinedOnPosition } from 'src/lib/general'
+import DirectoryIcon from 'src/assets/icons/directory.svg?react'
+import MailIcon from 'src/assets/icons/mail.svg?react'
+import AppointmentIcon from 'src/assets/icons/appointment.svg?react'
+import ContactIcon from 'src/assets/icons/contacts.svg?react'
+import TaskIcon from 'src/assets/icons/tasks.svg?react'
 
 type DirectoryViewProps = {
   directory: Directory
@@ -52,6 +57,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
         <DirectoryNode
           key={child.id}
           name={child.name}
+          icon={<DirectoryIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={child === firstElement}
           isLast={child === lastElement}
           onClick={() => props.onDirectoryChange(child)}
@@ -61,6 +67,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
         <DirectoryNode
           key={message.id}
           name={message.subject}
+          icon={<MailIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={message === firstElement}
           isLast={message === lastElement}
           onClick={() => {}}
@@ -70,6 +77,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
         <DirectoryNode
           key={appointment.id}
           name={appointment.name}
+          icon={<AppointmentIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={appointment === firstElement}
           isLast={appointment === lastElement}
           onClick={() => {}}
@@ -79,6 +87,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
         <DirectoryNode
           key={appointment.id}
           name={appointment.name}
+          icon={<AppointmentIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={appointment === firstElement}
           isLast={appointment === lastElement}
           onClick={() => {}}
@@ -88,6 +97,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
         <DirectoryNode
           key={contact.id}
           name={contact.displayName}
+          icon={<ContactIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={contact === firstElement}
           isLast={contact === lastElement}
           onClick={() => {}}
@@ -97,6 +107,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
         <DirectoryNode
           key={task.id}
           name={task.name}
+          icon={<TaskIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={task === firstElement}
           isLast={task === lastElement}
           onClick={() => {}}
