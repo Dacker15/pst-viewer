@@ -2,6 +2,7 @@ import { type FC, useCallback, useMemo, useState } from 'react'
 import type { Directory } from 'src/lib/pst/types'
 import DirectoryView from 'src/components/organisms/DirectoryView'
 import Button from 'src/components/atoms/Button'
+import Breadcrumb from 'src/components/molecules/Breadcrumb'
 import Back from 'src/assets/icons/back.svg?react'
 
 type TreeViewProps = {
@@ -18,13 +19,18 @@ const TreeView: FC<TreeViewProps> = (props) => {
     }
   }, [directory])
 
+  const handleNavigate = useCallback((directory: Directory) => {
+    setDirectory(directory)
+  }, [])
+
   return (
     <div className="flex flex-col gap-y-4 w-screen">
       <div className="border-b border-grey-400">
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-4 flex items-center gap-x-4">
           <Button disabled={isBackDisabled} onClick={handleBack}>
             <Back className="w-6 h-6 stroke-grey-500" />
           </Button>
+          <Breadcrumb directory={directory} onNavigate={handleNavigate} />
         </div>
       </div>
       <div className="container mx-auto p-4">
