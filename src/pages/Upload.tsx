@@ -81,7 +81,7 @@ const Upload: FC<UploadProps> = (props) => {
 
   useEffect(() => {
     if (error) {
-      open(error)
+      open({ message: error })
       setError(null)
     }
   }, [error, open])

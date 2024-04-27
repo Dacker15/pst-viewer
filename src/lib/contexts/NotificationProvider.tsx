@@ -1,9 +1,15 @@
 import { createContext, type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
-import ErrorComponent from 'src/components/atoms/Error'
-import { useTimeout } from 'src/lib/hooks/useTimeout'
+import Notification from 'src/components/atoms/Notification'
 
+type NotificationSettableData = {
+  message: string
+}
+type NotificationData = NotificationSettableData & {
+  id: number
+  timeout: number
+}
 type NotificationContext = {
-  open: (message: string) => void
+  open: (data: NotificationSettableData) => void
 }
 type NotificationProviderProps = {
   children: ReactNode
@@ -13,31 +19,24 @@ export const NotificationContext = createContext<NotificationContext | undefined
 NotificationContext.displayName = 'NotificationContext'
 
 const NotificationProvider: FC<NotificationProviderProps> = ({ children }) => {
-  const [open, setOpen] = useState<boolean>(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [messages, setMessages] = useState<NotificationData[]>([])
 
-  const handleClose = useCallback(() => {
-    setOpen(false)
-    setTimeout(() => setMessage(null), 700)
+  const handleClose = useCallback((id: number) => {
+    setMessages((prev) => prev.filter((message) => message.id !== id))
   }, [])
 
-  const { reset } = useTimeout(handleClose, 5000)
-
-  const handleOpen = useCallback(
-    (message: string) => {
-      setMessage(message)
-      setOpen(true)
-      reset()
-    },
-    [reset]
-  )
+  const handleOpen = useCallback((data: NotificationSettableData) => {
+    setMessages((prev) => [...prev, { ...data, id: Date.now(), timeout: 5000 }])
+  }, [])
 
   const providerValue = useMemo<NotificationContext>(() => ({ open: handleOpen }), [handleOpen])
 
   return (
     <NotificationContext.Provider value={providerValue}>
       {children}
-      <ErrorComponent message={message} open={open} />
+      {messages.map((message) => (
+        <Notification key={message.id} {...message} onClose={() => handleClose(message.id)} />
+      ))}
     </NotificationContext.Provider>
   )
 }
