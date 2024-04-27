@@ -1,5 +1,7 @@
 import { type FC, type ReactNode, type TransitionEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
+import { useBreakpoint } from 'src/lib/hooks/useBreakpoint'
+import { getBreakpoints } from 'src/lib/breakpoints'
 
 type ModalContainerProps = {
   children: ReactNode
@@ -13,6 +15,7 @@ const CSS_TRANSITION_DURATION = `${TRANSITION_DURATION}ms`
 const ModalContainer: FC<ModalContainerProps> = ({ children, open, onClose }) => {
   const [containerOpen, setContainerOpen] = useState<boolean>(false)
   const [contentOpen, setContentOpen] = useState<boolean>(false)
+  const activeBreakpoints = useBreakpoint(getBreakpoints())
 
   useEffect(() => {
     if (open) {
@@ -31,22 +34,29 @@ const ModalContainer: FC<ModalContainerProps> = ({ children, open, onClose }) =>
   const containerClassName = useMemo(() => {
     return clsx('fixed inset-0 bg-black bg-opacity-50 justify-end', {
       hidden: !containerOpen,
-      flex: containerOpen
+      'flex flex-col md:flex-row': containerOpen
     })
   }, [containerOpen])
 
   const contentClassName = useMemo(() => {
+    const isMobile = !activeBreakpoints.includes('md')
     return clsx('bg-white p-4 h-screen flex-[3] transition-transform transform', {
-      'translate-x-full': !contentOpen
+      'translate-y-full': !contentOpen && isMobile,
+      'translate-x-full': !contentOpen && !isMobile
     })
-  }, [contentOpen])
+  }, [activeBreakpoints, contentOpen])
 
-  const handleTransitionEnd = useCallback((event: TransitionEvent<HTMLDivElement>) => {
-    const classList = event.currentTarget.classList
-    if (classList.contains('translate-x-full')) {
-      setContainerOpen(false)
-    }
-  }, [])
+  const handleTransitionEnd = useCallback(
+    (event: TransitionEvent<HTMLDivElement>) => {
+      const isMobile = !activeBreakpoints.includes('md')
+      const targetToken = isMobile ? 'translate-y-full' : 'translate-x-full'
+      const classList = event.currentTarget.classList
+      if (classList.contains(targetToken)) {
+        setContainerOpen(false)
+      }
+    },
+    [activeBreakpoints]
+  )
 
   return (
     <div className={containerClassName}>
