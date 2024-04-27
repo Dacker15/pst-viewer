@@ -1,5 +1,8 @@
 import { createContext, type FC, type ReactNode, useCallback, useMemo, useState } from 'react'
+import clsx from 'clsx'
 import Notification from 'src/components/atoms/Notification'
+import { useBreakpoint } from 'src/lib/hooks/useBreakpoint'
+import { getBreakpoints } from 'src/lib/breakpoints'
 
 type NotificationSettableData = {
   message: string
@@ -20,6 +23,13 @@ NotificationContext.displayName = 'NotificationContext'
 
 const NotificationProvider: FC<NotificationProviderProps> = ({ children }) => {
   const [messages, setMessages] = useState<NotificationData[]>([])
+  const activeBreakpoints = useBreakpoint(getBreakpoints())
+  const containerClassName = useMemo(() => {
+    return clsx('fixed flex gap-y-4', {
+      'bottom-4 left-4 right-4 mx-auto max-w-full flex-col-reverse': !activeBreakpoints.includes('md'),
+      'top-4 right-4 flex-col': activeBreakpoints.includes('md')
+    })
+  }, [activeBreakpoints])
 
   const handleClose = useCallback((id: number) => {
     setMessages((prev) => prev.filter((message) => message.id !== id))
@@ -34,9 +44,11 @@ const NotificationProvider: FC<NotificationProviderProps> = ({ children }) => {
   return (
     <NotificationContext.Provider value={providerValue}>
       {children}
-      {messages.map((message) => (
-        <Notification key={message.id} {...message} onClose={() => handleClose(message.id)} />
-      ))}
+      <div className={containerClassName}>
+        {messages.map((message) => (
+          <Notification key={message.id} {...message} onClose={() => handleClose(message.id)} />
+        ))}
+      </div>
     </NotificationContext.Provider>
   )
 }
