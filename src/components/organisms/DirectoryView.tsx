@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react'
-import type { Directory } from 'src/lib/pst/types'
+import type { Directory, Task } from 'src/lib/pst/types'
 import DirectoryNode from 'src/components/molecules/DirectoryNode'
 import { getFirstNotUndefinedOnPosition } from 'src/lib/general'
 import DirectoryIcon from 'src/assets/icons/directory.svg?react'
@@ -11,6 +11,7 @@ import TaskIcon from 'src/assets/icons/tasks.svg?react'
 type DirectoryViewProps = {
   directory: Directory
   onDirectoryChange: (directory: Directory) => void
+  onTaskSelect: (task: Task) => void
 }
 
 const DirectoryView: FC<DirectoryViewProps> = (props) => {
@@ -110,7 +111,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
           icon={<TaskIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={task === firstElement}
           isLast={task === lastElement}
-          onClick={() => {}}
+          onClick={() => props.onTaskSelect(task)}
         />
       ))}
     </div>

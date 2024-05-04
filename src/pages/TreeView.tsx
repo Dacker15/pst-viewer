@@ -1,8 +1,9 @@
 import { type FC, useCallback, useMemo, useState } from 'react'
-import type { Directory } from 'src/lib/pst/types'
-import DirectoryView from 'src/components/organisms/DirectoryView'
+import type { Directory, Task } from 'src/lib/pst/types'
 import Button from 'src/components/atoms/Button'
 import Breadcrumb from 'src/components/molecules/Breadcrumb'
+import TasksModal from 'src/components/molecules/TasksModal'
+import DirectoryView from 'src/components/organisms/DirectoryView'
 import Back from 'src/assets/icons/back.svg?react'
 
 type TreeViewProps = {
@@ -11,6 +12,7 @@ type TreeViewProps = {
 
 const TreeView: FC<TreeViewProps> = (props) => {
   const [directory, setDirectory] = useState<Directory>(props.data)
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const isBackDisabled = useMemo(() => directory.root === null, [directory])
 
   const handleBack = useCallback(() => {
@@ -21,6 +23,10 @@ const TreeView: FC<TreeViewProps> = (props) => {
 
   const handleNavigate = useCallback((directory: Directory) => {
     setDirectory(directory)
+  }, [])
+
+  const handleTaskModalClose = useCallback(() => {
+    setSelectedTask(null)
   }, [])
 
   return (
@@ -34,8 +40,9 @@ const TreeView: FC<TreeViewProps> = (props) => {
         </div>
       </div>
       <div className="container mx-auto p-4">
-        <DirectoryView directory={directory} onDirectoryChange={setDirectory} />
+        <DirectoryView directory={directory} onDirectoryChange={setDirectory} onTaskSelect={setSelectedTask} />
       </div>
+      <TasksModal open={!!selectedTask} onClose={handleTaskModalClose} task={selectedTask} />
     </div>
   )
 }
