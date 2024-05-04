@@ -3,10 +3,13 @@ import clsx from 'clsx'
 import { useBreakpoint } from 'src/lib/hooks/useBreakpoint'
 import { getBreakpoints } from 'src/lib/breakpoints'
 
-type ModalContainerProps = {
-  children: ReactNode
+export type ModalProps = {
   open: boolean
   onClose: () => void
+}
+
+type ModalContainerProps = ModalProps & {
+  children: ReactNode
 }
 
 const TRANSITION_DURATION = 300
