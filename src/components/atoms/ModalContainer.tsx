@@ -43,7 +43,7 @@ const ModalContainer: FC<ModalContainerProps> = ({ children, open, onClose }) =>
 
   const contentClassName = useMemo(() => {
     const isMobile = !activeBreakpoints.includes('md')
-    return clsx('bg-white p-4 h-screen flex-[3] transition-transform transform', {
+    return clsx('bg-white p-4 h-screen transition-transform transform flex-[3] xl:flex-[2]', {
       'translate-y-full': !contentOpen && isMobile,
       'translate-x-full': !contentOpen && !isMobile
     })
@@ -63,7 +63,7 @@ const ModalContainer: FC<ModalContainerProps> = ({ children, open, onClose }) =>
 
   return (
     <div className={containerClassName}>
-      <div className="flex-1" onClick={onClose} />
+      <div className="flex-1 md:flex-[2] xl:flex-[3]" onClick={onClose} />
       <div
         className={contentClassName}
         style={{ transitionDuration: CSS_TRANSITION_DURATION }}
