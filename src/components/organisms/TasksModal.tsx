@@ -1,8 +1,9 @@
 import { type FC } from 'react'
-import { type Task, type TaskRecurrenceOptions, TaskStatus } from 'src/lib/pst/types'
-import ModalContainer, { type ModalProps } from 'src/components/atoms/ModalContainer'
-import FieldRender from 'src/components/atoms/FieldRender'
-import { WEEKDAYS } from 'src/lib/constants'
+import { type Task, type TaskRecurrenceOptions, TaskStatus } from 'src/lib/pst/types.ts'
+import ModalContainer, { type ModalProps } from 'src/components/atoms/ModalContainer.tsx'
+import FieldRender from 'src/components/atoms/FieldRender.tsx'
+import { WEEKDAYS } from 'src/lib/constants.ts'
+import Attachments from 'src/components/molecules/Attachments.tsx'
 
 type TasksModalProps = ModalProps & {
   task: Task | null
@@ -70,7 +71,7 @@ const TasksModal: FC<TasksModalProps> = ({ task, open, onClose }) => {
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold mb-2">{task.name}</h1>
           {task.description && <p className="mb-2">{task.description}</p>}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mb-2">
             <FieldRender title="Starts At" value={task.startAt?.toLocaleString()} isHidden={!task.startAt} />
             <FieldRender title="Due At" value={task.dueAt?.toLocaleString()} isHidden={!task.dueAt} />
             <FieldRender title="Completed At" value={task.completedAt?.toLocaleString()} isHidden={!task.completedAt} />
@@ -84,6 +85,7 @@ const TasksModal: FC<TasksModalProps> = ({ task, open, onClose }) => {
               isHidden={!task.recurrence}
             />
           </div>
+          {task.attachments.length > 0 && <Attachments attachments={task.attachments} />}
         </div>
       )}
     </ModalContainer>

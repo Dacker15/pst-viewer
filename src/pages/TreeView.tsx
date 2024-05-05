@@ -2,7 +2,7 @@ import { type FC, useCallback, useMemo, useState } from 'react'
 import type { Directory, Task } from 'src/lib/pst/types'
 import Button from 'src/components/atoms/Button'
 import Breadcrumb from 'src/components/molecules/Breadcrumb'
-import TasksModal from 'src/components/molecules/TasksModal'
+import TasksModal from 'src/components/organisms/TasksModal'
 import DirectoryView from 'src/components/organisms/DirectoryView'
 import Back from 'src/assets/icons/back.svg?react'
 
