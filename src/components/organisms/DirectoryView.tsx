@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react'
-import type { Contact, Directory, Task } from 'src/lib/pst/types'
+import type { Appointment, Contact, Directory, Task, UnscheduledAppointment } from 'src/lib/pst/types'
 import DirectoryNode from 'src/components/molecules/DirectoryNode'
 import { getFirstNotUndefinedOnPosition } from 'src/lib/general'
 import DirectoryIcon from 'src/assets/icons/directory.svg?react'
@@ -11,6 +11,7 @@ import TaskIcon from 'src/assets/icons/tasks.svg?react'
 type DirectoryViewProps = {
   directory: Directory
   onDirectoryChange: (directory: Directory) => void
+  onAppointmentSelect: (appointment: Appointment | UnscheduledAppointment) => void
   onTaskSelect: (task: Task) => void
   onContactSelect: (contact: Contact) => void
 }
@@ -82,7 +83,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
           icon={<AppointmentIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={appointment === firstElement}
           isLast={appointment === lastElement}
-          onClick={() => {}}
+          onClick={() => props.onAppointmentSelect(appointment)}
         />
       ))}
       {props.directory.unscheduledAppointments.map((appointment) => (
@@ -92,7 +93,7 @@ const DirectoryView: FC<DirectoryViewProps> = (props) => {
           icon={<AppointmentIcon className="w-6 h-6 stroke-grey-500" />}
           isFirst={appointment === firstElement}
           isLast={appointment === lastElement}
-          onClick={() => {}}
+          onClick={() => props.onAppointmentSelect(appointment)}
         />
       ))}
       {props.directory.contacts.map((contact) => (
