@@ -142,9 +142,13 @@ export enum MessagePriority {
   High = 2
 }
 
+export type MessageFrom = {
+  address: string
+  name: string
+}
+
 export type Message = BaseEntity & {
-  from: string
-  fromName: string
+  from: MessageFrom
   to: string
   cc: string[]
   bcc: string[]

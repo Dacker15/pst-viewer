@@ -216,8 +216,10 @@ const parseFolder = (folder: PSTFolder, root: Directory | null = null, folderNam
         }
         directory.messages.push({
           id: uuidV4(),
-          from: message.senderEmailAddress,
-          fromName: message.senderName,
+          from: {
+            address: message.senderEmailAddress,
+            name: message.senderName
+          },
           to: message.displayTo,
           cc: message.displayCC.length > 0 ? message.displayCC.split(';') : [],
           bcc: message.displayBCC.length > 0 ? message.displayBCC.split(';') : [],

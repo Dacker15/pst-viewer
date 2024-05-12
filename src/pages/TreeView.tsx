@@ -1,10 +1,11 @@
 import { type FC, useCallback, useMemo, useState } from 'react'
-import type { Appointment, Contact, Directory, Task, UnscheduledAppointment } from 'src/lib/pst/types'
+import type { Appointment, Contact, Directory, Message, Task, UnscheduledAppointment } from 'src/lib/pst/types'
 import Button from 'src/components/atoms/Button'
 import Breadcrumb from 'src/components/molecules/Breadcrumb'
 import TasksModal from 'src/components/organisms/TasksModal'
 import ContactsModal from 'src/components/organisms/ContactModal'
 import AppointmentModal from 'src/components/organisms/AppointmentModal'
+import MessageModal from 'src/components/organisms/MessageModal'
 import DirectoryView from 'src/components/organisms/DirectoryView'
 import Back from 'src/assets/icons/back.svg?react'
 
@@ -17,6 +18,7 @@ const TreeView: FC<TreeViewProps> = (props) => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | UnscheduledAppointment | null>(null)
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
   const isBackDisabled = useMemo(() => directory.root === null, [directory])
 
   const handleBack = useCallback(() => {
@@ -41,6 +43,10 @@ const TreeView: FC<TreeViewProps> = (props) => {
     setSelectedAppointment(null)
   }, [])
 
+  const handleMessageModalClose = useCallback(() => {
+    setSelectedMessage(null)
+  }, [])
+
   return (
     <div className="flex flex-col gap-y-4 w-screen">
       <div className="border-b border-grey-400">
@@ -58,6 +64,7 @@ const TreeView: FC<TreeViewProps> = (props) => {
           onTaskSelect={setSelectedTask}
           onContactSelect={setSelectedContact}
           onAppointmentSelect={setSelectedAppointment}
+          onMessageSelect={setSelectedMessage}
         />
       </div>
       <AppointmentModal
@@ -67,6 +74,7 @@ const TreeView: FC<TreeViewProps> = (props) => {
       />
       <TasksModal open={!!selectedTask} onClose={handleTaskModalClose} task={selectedTask} />
       <ContactsModal open={!!selectedContact} onClose={handleContactModalClose} contact={selectedContact} />
+      <MessageModal open={!!selectedMessage} onClose={handleMessageModalClose} message={selectedMessage} />
     </div>
   )
 }

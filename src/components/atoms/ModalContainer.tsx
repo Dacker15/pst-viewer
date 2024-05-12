@@ -43,7 +43,7 @@ const ModalContainer: FC<ModalContainerProps> = ({ children, open, onClose }) =>
 
   const contentClassName = useMemo(() => {
     const isMobile = !activeBreakpoints.includes('md')
-    return clsx('bg-white p-4 h-screen transition-transform transform flex-[3] xl:flex-[2]', {
+    return clsx('bg-white p-4 h-screen transition-transform transform flex-[3] xl:flex-[2] overflow-x-auto', {
       'translate-y-full': !contentOpen && isMobile,
       'translate-x-full': !contentOpen && !isMobile
     })
