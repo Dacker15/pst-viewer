@@ -1,5 +1,6 @@
 import { type FC, useCallback, useMemo, useState } from 'react'
 import type { Appointment, Contact, Directory, Message, Task, UnscheduledAppointment } from 'src/lib/pst/types'
+import { formatAllData } from 'src/lib/export'
 import Button from 'src/components/atoms/Button'
 import Breadcrumb from 'src/components/molecules/Breadcrumb'
 import TasksModal from 'src/components/organisms/TasksModal'
@@ -47,6 +48,10 @@ const TreeView: FC<TreeViewProps> = (props) => {
     setSelectedMessage(null)
   }, [])
 
+  const handleExport = useCallback(() => {
+    formatAllData(directory)
+  }, [directory])
+
   return (
     <div className="flex flex-col gap-y-4 w-screen">
       <div className="border-b border-grey-400">
@@ -55,6 +60,10 @@ const TreeView: FC<TreeViewProps> = (props) => {
             <Back className="w-6 h-6 stroke-grey-500" />
           </Button>
           <Breadcrumb directory={directory} onNavigate={handleNavigate} />
+          <div className="flex-1" />
+          <Button onClick={handleExport}>
+            <Back className="w-6 h-6 stroke-grey-500" />
+          </Button>
         </div>
       </div>
       <div className="container mx-auto p-4">
