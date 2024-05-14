@@ -48,22 +48,26 @@ export const appendOrCreate = (data: any, key: string, value: any, fillIndex: nu
 export const mapData = (data: any[], initialKey: string | null = null) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mappedData: any = {}
-  data.forEach((singleData) => {
-    const entries = Object.entries(singleData)
-    entries.forEach(([key, value], index) => {
+  data.forEach((singleData, index) => {
+    // TODO: Handle attachments count
+    const entries = Object.entries(singleData).filter(([key, _]) => !['attachments', 'id'].includes(key))
+    entries.forEach(([key, value]) => {
       const keyName = initialKey ? `${initialKey}.${key}` : key
-      if (typeof value === 'object') {
+      if (Array.isArray(value)) {
+        appendOrCreate(mappedData, keyName, value.join(', '), index)
+      } else if (value === null) {
+        appendOrCreate(mappedData, keyName, undefined, index)
+      } else if (value instanceof Date) {
+        appendOrCreate(mappedData, keyName, value.toISOString(), index)
+      } else if (typeof value === 'object') {
         const nestedData = mapData([value], keyName)
         Object.entries(nestedData).forEach(([nestedKey, nestedValue]) => {
-          appendOrCreate(mappedData, nestedKey, nestedValue, index)
+          const [nestedEffectiveValue] = nestedValue as unknown[]
+          appendOrCreate(mappedData, nestedKey, nestedEffectiveValue, index)
         })
         if (mappedData[keyName]) {
           delete mappedData[keyName]
         }
-      } else if (value instanceof Date) {
-        appendOrCreate(mappedData, keyName, value.toISOString(), index)
-      } else if (Array.isArray(value)) {
-        appendOrCreate(mappedData, keyName, value.join(', '), index)
       } else if (typeof value === 'string') {
         appendOrCreate(mappedData, keyName, escapeStringData(value), index)
       } else {
@@ -77,15 +81,10 @@ export const mapData = (data: any[], initialKey: string | null = null) => {
 export const formatAllData = (directory: Directory) => {
   const { messages, tasks, contacts, appointments, unscheduledAppointments } = findElements(directory)
   const mappedMessages = mapData(messages)
-  console.log(messages)
   const mappedTasks = mapData(tasks)
-  console.log(tasks)
   const mappedContacts = mapData(contacts)
-  console.log(contacts)
   const mappedAppointments = mapData(appointments)
-  console.log(appointments)
   const mappedUnscheduledAppointments = mapData(unscheduledAppointments)
-  console.log(unscheduledAppointments)
   console.log(mappedMessages)
   console.log(mappedTasks)
   console.log(mappedContacts)
