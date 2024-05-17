@@ -1,4 +1,4 @@
-import type { Appointment, Contact, Directory, Message, Task, UnscheduledAppointment } from 'src/lib/pst/types.ts'
+import type { Appointment, Contact, Directory, Message, Task, UnscheduledAppointment } from 'src/lib/pst/types'
 
 export const findElements = (directory: Directory) => {
   const messages: Message[] = []
@@ -32,48 +32,59 @@ export const findElements = (directory: Directory) => {
 
 export const escapeStringData = (data: string) => `"${data.replaceAll(/"/g, '""')}"`
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const appendOrCreate = (data: any, key: string, value: any, fillIndex: number) => {
+export const appendOrCreate = (data: Record<string, unknown>, key: string, value: unknown, fillIndex: number) => {
   if (data[key]) {
-    data[key].push(value)
+    const array = data[key] as unknown[]
+    array.push(value)
   } else if (fillIndex === 0) {
     data[key] = [value]
   } else {
-    data[key] = new Array(fillIndex - 1).fill(undefined)
-    data[key].push(value)
+    const array = new Array<unknown>(fillIndex - 1).fill(undefined)
+    array.push(value)
+    data[key] = array
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mapData = (data: any[], initialKey: string | null = null) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mappedData: any = {}
-  data.forEach((singleData, index) => {
-    // TODO: Handle attachments count
-    const entries = Object.entries(singleData).filter(([key, _]) => !['attachments', 'id'].includes(key))
-    entries.forEach(([key, value]) => {
-      const keyName = initialKey ? `${initialKey}.${key}` : key
-      if (Array.isArray(value)) {
-        appendOrCreate(mappedData, keyName, value.join(', '), index)
-      } else if (value === null) {
-        appendOrCreate(mappedData, keyName, undefined, index)
-      } else if (value instanceof Date) {
-        appendOrCreate(mappedData, keyName, value.toISOString(), index)
-      } else if (typeof value === 'object') {
-        const nestedData = mapData([value], keyName)
-        Object.entries(nestedData).forEach(([nestedKey, nestedValue]) => {
-          const [nestedEffectiveValue] = nestedValue as unknown[]
-          appendOrCreate(mappedData, nestedKey, nestedEffectiveValue, index)
-        })
-        if (mappedData[keyName]) {
-          delete mappedData[keyName]
-        }
-      } else if (typeof value === 'string') {
-        appendOrCreate(mappedData, keyName, escapeStringData(value), index)
-      } else {
-        appendOrCreate(mappedData, keyName, value, index)
+export const mapObject = (data: Record<string, unknown>, initialKey: string | null = null, fillIndex: number = 0) => {
+  const mappedData: Record<string, unknown> = {}
+  Object.entries(data).forEach(([key, value]) => {
+    const keyName = initialKey ? `${initialKey}.${key}` : key
+    if (Array.isArray(value)) {
+      appendOrCreate(mappedData, keyName, value.join(', '), fillIndex)
+    } else if (value === null) {
+      appendOrCreate(mappedData, keyName, undefined, fillIndex)
+    } else if (value instanceof Date) {
+      appendOrCreate(mappedData, keyName, value.toISOString(), fillIndex)
+    } else if (typeof value === 'object') {
+      const nestedData = mapObject(value as Record<string, unknown>, keyName)
+      Object.entries(nestedData).forEach(([nestedKey, nestedValue]) => {
+        const [nestedEffectiveValue] = nestedValue as unknown[]
+        appendOrCreate(mappedData, nestedKey, nestedEffectiveValue, fillIndex)
+      })
+      if (mappedData[keyName]) {
+        delete mappedData[keyName]
       }
+    } else if (typeof value === 'string') {
+      appendOrCreate(mappedData, keyName, escapeStringData(value), fillIndex)
+    } else {
+      appendOrCreate(mappedData, keyName, value, fillIndex)
+    }
+  })
+  return mappedData
+}
+
+export const mapData = (data: Record<string, unknown>[], initialKey: string | null = null) => {
+  const mappedData: Record<string, unknown[]> = {}
+  data.forEach((singleData, index) => {
+    const { attachments, _id, ...remainingData } = singleData
+    const mappedSingleData = mapObject(remainingData, initialKey, index)
+    Object.entries(mappedSingleData).forEach(([key, value]) => {
+      const [effectiveValue] = value as unknown[]
+      appendOrCreate(mappedData, key, effectiveValue, index)
     })
+    if (attachments && Array.isArray(attachments)) {
+      appendOrCreate(mappedData, `attachments_count`, attachments.length, index)
+    }
   })
   return mappedData
 }
