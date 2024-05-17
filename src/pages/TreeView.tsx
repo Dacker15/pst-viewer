@@ -1,6 +1,6 @@
 import { type FC, useCallback, useMemo, useState } from 'react'
 import type { Appointment, Contact, Directory, Message, Task, UnscheduledAppointment } from 'src/lib/pst/types'
-import { formatAllData } from 'src/lib/export'
+import { downloadCsvZip } from 'src/lib/export'
 import Button from 'src/components/atoms/Button'
 import Breadcrumb from 'src/components/molecules/Breadcrumb'
 import TasksModal from 'src/components/organisms/TasksModal'
@@ -48,8 +48,8 @@ const TreeView: FC<TreeViewProps> = (props) => {
     setSelectedMessage(null)
   }, [])
 
-  const handleExport = useCallback(() => {
-    formatAllData(directory)
+  const handleExport = useCallback(async () => {
+    await downloadCsvZip(directory)
   }, [directory])
 
   return (

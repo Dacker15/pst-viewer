@@ -12,6 +12,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@zip.js/zip.js": "^2.7.44",
     "clsx": "^2.1.0",
     "file-type": "^19.0.0",
     "pst-extractor": "^1.9.0",
