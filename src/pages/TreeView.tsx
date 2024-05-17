@@ -9,6 +9,7 @@ import AppointmentModal from 'src/components/organisms/AppointmentModal'
 import MessageModal from 'src/components/organisms/MessageModal'
 import DirectoryView from 'src/components/organisms/DirectoryView'
 import Back from 'src/assets/icons/back.svg?react'
+import FolderArrowDown from 'src/assets/icons/folder-arrow-down.svg?react'
 
 type TreeViewProps = {
   data: Directory
@@ -62,7 +63,7 @@ const TreeView: FC<TreeViewProps> = (props) => {
           <Breadcrumb directory={directory} onNavigate={handleNavigate} />
           <div className="flex-1" />
           <Button onClick={handleExport}>
-            <Back className="w-6 h-6 stroke-grey-500" />
+            <FolderArrowDown className="w-6 h-6 stroke-grey-500" />
           </Button>
         </div>
       </div>
