@@ -1,6 +1,7 @@
 import { type FC, useMemo } from 'react'
 import ModalContainer, { type ModalProps } from 'src/components/atoms/ModalContainer'
 import { type Appointment, AppointmentBusyStatus, type UnscheduledAppointment } from 'src/lib/pst/types'
+import Description from 'src/components/atoms/Description'
 import FieldRender from 'src/components/atoms/FieldRender'
 import Attachments from 'src/components/molecules/Attachments'
 
@@ -38,7 +39,7 @@ const AppointmentModal: FC<AppointmentModalProps> = ({ appointment, open, onClos
       {appointment && (
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold mb-2">{appointment.name}</h1>
-          {appointment.description && <p className="mb-2">{appointment.description}</p>}
+          {appointment.description && <Description text={appointment.description} className="mb-2" />}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2 mb-2">
             <FieldRender
               title="Starts At"
