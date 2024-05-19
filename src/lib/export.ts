@@ -82,7 +82,7 @@ export const mapObject = (data: Record<string, unknown>, initialKey: string | nu
 export const mapData = (data: Record<string, unknown>[], initialKey: string | null = null) => {
   const mappedData: Record<string, unknown[]> = {}
   data.forEach((singleData, index) => {
-    const { attachments, _id, ...remainingData } = singleData
+    const { attachments, id: _id, ...remainingData } = singleData
     const mappedSingleData = mapObject(remainingData, initialKey, 0)
     Object.entries(mappedSingleData).forEach(([key, value]) => {
       const [effectiveValue] = value as unknown[]
