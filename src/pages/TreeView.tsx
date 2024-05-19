@@ -1,6 +1,7 @@
-import { type FC, useCallback, useMemo, useState } from 'react'
+import { type FC, useCallback, useEffect, useMemo, useState } from 'react'
 import type { Appointment, Contact, Directory, Message, Task, UnscheduledAppointment } from 'src/lib/pst/types'
 import { downloadCsvZip } from 'src/lib/export'
+import { useDocumentTitle } from 'src/lib/hooks/useDocumentTitle'
 import Button from 'src/components/atoms/Button'
 import Breadcrumb from 'src/components/molecules/Breadcrumb'
 import TasksModal from 'src/components/organisms/TasksModal'
@@ -22,6 +23,7 @@ const TreeView: FC<TreeViewProps> = (props) => {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | UnscheduledAppointment | null>(null)
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
   const isBackDisabled = useMemo(() => directory.root === null, [directory])
+  const { updateTitle } = useDocumentTitle()
 
   const handleBack = useCallback(() => {
     if (directory.root) {
@@ -52,6 +54,10 @@ const TreeView: FC<TreeViewProps> = (props) => {
   const handleExport = useCallback(async () => {
     await downloadCsvZip(directory)
   }, [directory])
+
+  useEffect(() => {
+    updateTitle(`${directory.name} - PST Viewer`)
+  }, [directory, updateTitle])
 
   return (
     <div className="flex flex-col gap-y-4 w-screen">

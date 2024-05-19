@@ -1,5 +1,6 @@
 import { type ChangeEvent, type DragEvent, type FC, useCallback, useEffect, useRef, useState } from 'react'
 import Button from 'src/components/atoms/Button'
+import { useDocumentTitle } from 'src/lib/hooks/useDocumentTitle'
 import { useNotification } from 'src/lib/hooks/useNotification'
 import { isPstFileValid } from 'src/lib/pst/validition'
 
@@ -12,6 +13,7 @@ const Upload: FC<UploadProps> = (props) => {
   const [error, setError] = useState<string | null>(null)
   const input = useRef<HTMLInputElement>(null)
   const { open } = useNotification()
+  const { updateTitle } = useDocumentTitle()
 
   const handleClick = useCallback(() => {
     input.current?.click()
@@ -85,6 +87,10 @@ const Upload: FC<UploadProps> = (props) => {
       setError(null)
     }
   }, [error, open])
+
+  useEffect(() => {
+    updateTitle('PST Viewer')
+  }, [updateTitle])
 
   return (
     <div className="flex flex-col items-center gap-4 py-8 h-screen" onDragOver={handleDragOver} onDrop={handleDrop}>
