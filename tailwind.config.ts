@@ -32,7 +32,9 @@ export default {
         13: '4rem'
       },
       animation: {
-        'slide-from-bottom': '1s ease-out 0s 1 slideFromBottom;'
+        'slide-from-bottom': '1s ease-out 0s 1 slideFromBottom;',
+        'infinite-spin': 'infinite-spin 2s linear infinite;',
+        dash: 'loader-dash 1s ease-in-out infinite;'
       },
       keyframes: {
         slideFromBottom: {
@@ -41,6 +43,28 @@ export default {
           },
           '100%': {
             transform: 'translateY(0)'
+          }
+        },
+        'infinite-spin': {
+          '0%': {
+            transform: 'rotate(0deg)'
+          },
+          '100%': {
+            transform: 'rotate(360deg)'
+          }
+        },
+        'loader-dash': {
+          '0%': {
+            'stroke-dasharray': '1,200',
+            'stroke-dashoffset': '0'
+          },
+          '50%': {
+            'stroke-dasharray': '89,200',
+            'stroke-dashoffset': '-35'
+          },
+          '100%': {
+            'stroke-dasharray': '89,200',
+            'stroke-dashoffset': '-124'
           }
         }
       }

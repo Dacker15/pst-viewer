@@ -1,13 +1,14 @@
-import { type ButtonHTMLAttributes, type DetailedHTMLProps, type FC, useMemo } from 'react'
+import { type ButtonHTMLAttributes, type DetailedHTMLProps, type FC, type ReactNode, useMemo } from 'react'
 import clsx from 'clsx'
 
 type ButtonProps = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
   variant?: 'outline' | 'filled' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   rounded?: boolean
+  icon?: ReactNode
 }
 
-const Button: FC<ButtonProps> = ({ children, variant = 'outline', size = 'sm', rounded = true, ...props }) => {
+const Button: FC<ButtonProps> = ({ children, variant = 'outline', size = 'sm', rounded = true, icon, ...props }) => {
   const className = useMemo(() => {
     return clsx(props.className, {
       'bg-white text-grey-500 border border-grey-400 hover:bg-grey-100 active:bg-grey-300 active:text-black':
@@ -18,12 +19,14 @@ const Button: FC<ButtonProps> = ({ children, variant = 'outline', size = 'sm', r
       'px-8 py-4 text-base': size === 'md',
       'px-12 py-5 text-lg': size === 'lg',
       'rounded-full': rounded,
-      'cursor-not-allowed opacity-50 pointer-events-none': props.disabled
+      'cursor-not-allowed opacity-50 pointer-events-none': props.disabled,
+      'flex gap-x-4 items-center': icon
     })
-  }, [props.className, props.disabled, variant, size, rounded])
+  }, [props.className, props.disabled, variant, size, rounded, icon])
 
   return (
     <button {...props} className={className}>
+      {icon}
       {children}
     </button>
   )

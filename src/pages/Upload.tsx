@@ -1,10 +1,12 @@
 import { type ChangeEvent, type DragEvent, type FC, useCallback, useEffect, useRef, useState } from 'react'
 import Button from 'src/components/atoms/Button'
+import Loader from 'src/components/atoms/Loader'
 import { useDocumentTitle } from 'src/lib/hooks/useDocumentTitle'
 import { useNotification } from 'src/lib/hooks/useNotification'
 import { isPstFileValid } from 'src/lib/pst/validition'
 
 type UploadProps = {
+  loading: boolean
   onUploadDone: (file: File) => void
 }
 
@@ -99,8 +101,14 @@ const Upload: FC<UploadProps> = (props) => {
         <p className="text-2xl text-grey-450">Update and export your PST file contents</p>
       </div>
       <input ref={input} type="file" accept=".pst" className="hidden" onChange={handleInputChange} />
-      <Button variant="filled" size="lg" onClick={handleClick}>
-        Upload
+      <Button
+        variant="filled"
+        size="lg"
+        onClick={handleClick}
+        disabled={props.loading}
+        icon={props.loading ? <Loader size={24} /> : undefined}
+      >
+        {props.loading ? 'Uploading' : 'Upload'}
       </Button>
       <p className="text-base text-grey-450">or drop your file here</p>
     </div>
