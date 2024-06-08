@@ -1,30 +1,27 @@
-# React + TypeScript + Vite
+# PST Viewer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PST Viewer is a web application that allows you to extract, view, and download data contained in a Microsoft Outlook PST (Personal Storage Table) file.
 
-Currently, two official plugins are available:
+## Why was this project created?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was born out of the personal need to extract to-do lists from Microsoft To Do. Unfortunately, Microsoft does not provide a direct export of contents, but only allows you to export the entire account with all its contents.
 
-## Expanding the ESLint configuration
+Having found only installable programs, I decided to create this simple application to suit my needs.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+After cloning the repository, install the dependencies with the command:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname
-  }
-}
+```bash
+yarn
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Usage
+
+To start the application in development mode, run the command:
+
+```bash
+yarn dev
+```
+
+After uploading your PST file, you can view the contents and download them, starting from the folder where you are viewing the contents.
